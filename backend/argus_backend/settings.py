@@ -39,12 +39,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'api',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'corsheaders.middlewareCorsMiddleWare',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -66,6 +68,9 @@ TEMPLATES = [
             ],
         },
     },
+]
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:5173',
 ]
 
 WSGI_APPLICATION = 'argus_backend.wsgi.application'
