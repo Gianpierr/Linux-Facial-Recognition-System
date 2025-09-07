@@ -16,11 +16,12 @@ import DraftsIcon from '@mui/icons-material/Drafts';
 import MovieIcon from '@mui/icons-material/Movie';
 import PhotoIcon from '@mui/icons-material/Photo';
 import VideocamIcon from '@mui/icons-material/Videocam';
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 
 export default function Menu() {
   const [open, setOpen] = React.useState(true);
-
+  const location = useLocation()
+  const path = location.pathname
   const handleClick = () => {
     setOpen(!open);
   };
@@ -36,13 +37,13 @@ export default function Menu() {
         </ListSubheader>
       }
     >
-      <ListItemButton component={Link} to="/">
+      <ListItemButton component={Link} to="/" selected={path=='/'}>
         <ListItemIcon>
           <SpaceDashboardIcon/>
         </ListItemIcon>
         <ListItemText primary="Dashboard" /> {/* add a dynamic counter maybe? */}
       </ListItemButton>
-      <ListItemButton component={Link} to="/notifications">
+      <ListItemButton component={Link} to="/notifications" selected={path=='/notifications'}>
         <ListItemIcon>
           <NotificationsIcon/>
         </ListItemIcon>
@@ -59,13 +60,13 @@ export default function Menu() {
 
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <ListItemButton sx={{ pl: 4 }}>
+          <ListItemButton sx={{ pl: 4 }} component = {Link} to="/pictures" selected={path == '/pictures'}>
             <ListItemIcon>
               <PhotoIcon/>
             </ListItemIcon>
             <ListItemText primary="Photos" />
           </ListItemButton>
-          <ListItemButton sx={{ pl: 4 }} component = {Link} to="videos/">
+          <ListItemButton sx={{ pl: 4 }} component = {Link} to="/videos" selected={path == '/videos'}>
             <ListItemIcon>
               <VideocamIcon/>
             </ListItemIcon>
