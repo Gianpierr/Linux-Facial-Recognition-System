@@ -1,34 +1,125 @@
-.dashboard {
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    height: 50vh;
-    width: min(100%, 400px); /* width can only ever be 400px minimum */
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    border-radius: 12px;
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-    background: white;
-    border: 1px solid rgba(0, 0, 0. 0.05);
 
-    padding: 24px;
-    margin: 16px 0;
+@keyframes scaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
 
-    backdrop-filter: blur(10px);
-    background: rgba(255, 255, 255, 0.9)
-    
+
+@keyframes blurIn {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+
+@keyframes rotateIn {
+  from {
+    opacity: 0;
+    transform: rotate(-10deg) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
+}
+
+
+
+
+
+ .dashboard {
+  width: 100vw;
+
+ }
+
+.dashboard .card-grid {
+  display: grid;
+  /* grid-template-columns: repeat(3, minmax(150px, 1fr)); */
+  grid-template-columns: repeat(3, 1fr); /* Always 4 columns */
+  grid-template-rows: repeat(3, 1fr);
+  gap: 10px;
+  margin: 0 auto;
+  margin-top: 50px;
+  margin-left: 200px;
+  margin-right: 0px;
+  height: 100vh;
+  
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  animation: scaleIn 1s;
+ 
+ 
+}
+
+
+
+
+
+.card.large {
+  grid-column: span 2 !important;  /* Spans columns 1-2 */
+  grid-row: span 2 !important;
+
 
 }
 
-.dashboard:active {
-    transform: translateY(-1px) scale(0.98);
-    transition-duration: 0.1s;
+.card.tall {
+  grid-row: span 2;
 }
 
-@keyframes pulse {
-    0%, 100% { opacity: 10; }
-    50% { opacity: 10; }
-  }
+.card.wide {
+  grid-column: span 2
+}
 
 
-.dashboard.loading {
-    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
+.card-holder {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 5px;
+
+}
+
+
+
+
+
+
+
+
+
+
+
