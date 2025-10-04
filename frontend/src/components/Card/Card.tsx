@@ -4,7 +4,7 @@ import React from 'react';
 interface CardProps {
     children: React.ReactNode;
     className ?: string;
-    key: string;
+    key: string | number;
     title: string;
     image: string;
     size: string;
