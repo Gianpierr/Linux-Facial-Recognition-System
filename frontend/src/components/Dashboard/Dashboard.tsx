@@ -42,32 +42,40 @@ export default function Dashboard() {
             ))}
 
          <div className="card-holder">
+
+            {/* Cpu Utilization Card */}
             <Card
                key="cpu-utilization"
-               title="sub-1"
-               image="small-image"
+               title="cpu-utilization"
+               image=""
                size="small">
-               <div> Div 1</div>
-            </Card>
-            <Card
-               key="memory"
-               title="sub-2"
-               image="small-image"
-               size="small">
-               <div> Div 2</div>
+               
+               <div className="cpu-monitor"> 
+                  87 % 
+               </div>
             </Card>
 
+            {/* Memory Utilization Card */}
+            <Card
+               key="memory"
+               title="memory"
+               image=""
+               size="small">
+               <div> 5 / 8 GB</div>
+            </Card>
+            {/* Storage Utilization Card */}
             <Card
                key="storage"
-               title="sub-3"
-               image="small-image"
+               title="storage"
+               image=""
                size="small">
                <div> Div 3</div>
             </Card>
 
+              {/* TODO: Utilization Card */}
             <Card
                key="least"
-               title="sub-4"
+               title="least"
                image="small-image"
                size="small">
                <div> Div 4</div>
