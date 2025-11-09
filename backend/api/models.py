@@ -4,24 +4,37 @@ from django.contrib.auth.models import User
 
 
 # Create your models here.
-class ProcessingTypes:
+class ProcessingTypes(models.TextChoices):
     PENDING = "PENDING"
     PROCESSING = "PROCESSING"
     COMPLETED = "COMPLETED"
 
+class Event(models.Model):
+    name = models.CharField()
 
+    def __str__(self):
+        return self.name
 
-class Photo:
+class MediaBase(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.DO_NOTHING) # need to 
+    captured_at = models.DateTimeField() # timestamp when media object is captured
+    created_at = models.DateField(auto_now_add=True) # creates the timestamp when created in DB
+    updated_at = models.DateTimeField(auto_now=True) 
+    is_flagged = models.BooleanField(default=False) # flagged for no deletion
+    notes = models.TextField(blank=True, null=True)
+    processing_status = models.CharField(choices = ProcessingTypes.choices)
+    has_detections = models.BooleanField(default=False) # AI processing detected anything
+    file_size = models.BigIntegerField() # For storage analytics
+
+    class Meta:
+        abstract = True
+
+class Photo(MediaBase):
     image = models.ImageField(upload_to="images/") # TODO: do not forget to set the media root
     thumbnail = models.ImageField(upload_to="images/") # Maybe use to show the user thumbnails of their captured pictures
-    captured_at = models.DateTimeField() 
-    file_size = models.BigIntegerField() # For storage analytics
-    format = models.CharField(max_length=10)
-    is_flagged = models.BooleanField(default=False) # flagged for no deletion
-    processing_status = models.TextChoices(choices = ProcessingTypes.choices)
-    notes = models.TextField(blank=True)
-    has_detections = models.BooleanField(default=False) # AI processing detected anything
-
+    image_format = models.CharField(max_length=10)
+    width = models.IntegerField()
+    height = models.IntegerField()
     storage_path = models.CharField()
 
 
