@@ -31,12 +31,22 @@ class MediaBase(models.Model):
 
 class Photo(MediaBase):
     image = models.ImageField(upload_to="images/") # TODO: do not forget to set the media root
-    thumbnail = models.ImageField(upload_to="images/") # Maybe use to show the user thumbnails of their captured pictures
+    thumbnail = models.ImageField(upload_to="image_thumbnails/") # Maybe use to show the user thumbnails of their captured pictures
     image_format = models.CharField(max_length=10)
     width = models.IntegerField()
     height = models.IntegerField()
     storage_path = models.CharField()
 
+
+
+class Video(MediaBase):
+    video = models.FileField(upload_to="videos/") #TODO: do not forget to set the media root 
+    thumbnail = models.ImageField(upload_to="video_thumbnails/")
+    duration = models.FloatField()
+    width = models.IntegerField()
+    height = models.IntegerField() # might delete these attributes (currently do not see the reason behind adding yet)
+    frame_rate = models.FloatField()
+    codec = models.CharField(max_length=10) # compressor/decompressor type
 
 
 
