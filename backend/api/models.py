@@ -1,22 +1,40 @@
 from django.db import models
 from django.contrib.auth.models import User
+from .constants import (
+    DetectionTypes,
+    ProcessingTypes,
+    EventStatusTypes
+
+)
 
 
-
-# Create your models here.
-class ProcessingTypes(models.TextChoices):
-    PENDING = "PENDING"
-    PROCESSING = "PROCESSING"
-    COMPLETED = "COMPLETED"
 
 class Event(models.Model):
-    name = models.CharField()
+    started_at = models.DateTimeField(auto_now=True)
+    ended_at = models.DateTimeField(null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    event_type = models.CharField(choices=EventStatusTypes.choices) 
+    is_flagged = models.BooleanField(default=False)  # Has the picture/video been flagged for deletion
+    is_reviewed = models.BooleanField(default=False) # Has user reviewed the Event
+    detection_count = models.IntegerField(default=0)
+    max_confidence = models.FloatField(default=0) 
+    notification_sent = models.BooleanField(default=False) # have we sent a notification 
+    notification_sent_at = models.DateTimeField(null=True) # when was the notification sent
+    thumbnail = models.ImageField() # picture with the maximum confidence in detection of an object
+
 
     def __str__(self):
         return self.name
+    
+
+
+
+    
+    
 
 class MediaBase(models.Model):
-    event = models.ForeignKey(Event, on_delete=models.DO_NOTHING) # need to 
+    event = models.ForeignKey(Event, on_delete=models.CASCADE) # need to 
     captured_at = models.DateTimeField() # timestamp when media object is captured
     created_at = models.DateField(auto_now_add=True) # creates the timestamp when created in DB
     updated_at = models.DateTimeField(auto_now=True) 
@@ -49,4 +67,23 @@ class Video(MediaBase):
     codec = models.CharField(max_length=10) # compressor/decompressor type
 
 
+class Notification(models.Model):
+    notification_type = models.TextChoices() # we can make notification types (CRITICAL, NON-CRITICAL, URGENT ETC)
+    message = models.TextField(blank=False, max_length=100) # will hold the notification message
+    event = models.ForeignKey(Event, null=False)
+    delivery_method = models.CharField(choices)
+        
+
+
+class Detection(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    detected_obj = models.CharField(choices=DetectionTypes.choices)
+    detected_at = models.DateTimeField(auto_now=True)
+    confidence = models.FloatField(default=0)
+    label = models.CharField() # Using YOLO for detection which has 80+ object classes (Not to be confused with DetectionType: label is more specific)
+    model_version = models.CharField()
+    photo = models.ForeignKey(Photo, on_delete=models.CASCADE)
+    video = models.ForeignKey(Video, on_delete=models.CASCADE, null=True, blank=True)
+    bounding_box = models.JSONField() # For example {"x": 100, "y": 100, "width": 200, "height": 300}
+    
 
