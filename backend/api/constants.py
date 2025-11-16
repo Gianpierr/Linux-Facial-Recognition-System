@@ -10,7 +10,7 @@ class DetectionTypes(models.TextChoices):
     ANINAL = "ANIMAL"
     VEHICLE = "VEHICLE" # Minimum Types for testing (will add more later)
     UNKNOWN_OBJECT = "UNKNOWN_OBJECT"
-    MULTIPLE_OBJECTS = False
+    MULTIPLE_OBJECTS = "False" # Maybe change but does not support it being a Boolean False
 
 class EventStatusTypes(models.TextChoices):
     ACTIVE = "ACTIVE"
@@ -21,7 +21,12 @@ class EventStatusTypes(models.TextChoices):
 class NotificationDeliveryTypes(models.TextChoices):
     EMAIL = "EMAIL"
     SMS = "SMS"
+    BOTH = "BOTH"
 
+class NotificationTypes(models.TextChoices):
+    NORMAL = "NORMAL" # Test notification types for now TODO: Add more specific notification types
+    URGENT = "URGENT"
+    
 class DeliveryStatus(models.TextChoices):
     PENDING = "PENDING"
     SENDING = "SENDING"
