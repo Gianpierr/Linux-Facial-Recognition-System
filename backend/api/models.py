@@ -75,3 +75,8 @@ class Detection(models.Model):
     video = models.ForeignKey(Video, on_delete=models.CASCADE, null=True, blank=True)
     bounding_box = models.JSONField() # For example {"x": 100, "y": 100, "width": 200, "height": 300}
 
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
+    phone = models.CharField(max_length=15)
+    profile_pic = models.ImageField()
+    # TODO: might add more user profile specific attributes
