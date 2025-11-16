@@ -3,11 +3,11 @@ from django.contrib.auth.models import User
 from .constants import (
     DetectionTypes,
     ProcessingTypes,
-    EventStatusTypes
-
+    EventStatusTypes,
+    NotificationDeliveryTypes,
+    DeliveryStatus,
+    NotificationTypes
 )
-
-
 
 class Event(models.Model):
     started_at = models.DateTimeField(auto_now=True)
@@ -23,16 +23,9 @@ class Event(models.Model):
     notification_sent_at = models.DateTimeField(null=True) # when was the notification sent
     thumbnail = models.ImageField() # picture with the maximum confidence in detection of an object
 
-
     def __str__(self):
         return self.name
     
-
-
-
-    
-    
-
 class MediaBase(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE) # need to 
     captured_at = models.DateTimeField() # timestamp when media object is captured
@@ -55,8 +48,6 @@ class Photo(MediaBase):
     height = models.IntegerField()
     storage_path = models.CharField()
 
-
-
 class Video(MediaBase):
     video = models.FileField(upload_to="videos/") #TODO: do not forget to set the media root 
     thumbnail = models.ImageField(upload_to="video_thumbnails/")
@@ -66,15 +57,13 @@ class Video(MediaBase):
     frame_rate = models.FloatField()
     codec = models.CharField(max_length=10) # compressor/decompressor type
 
-
 class Notification(models.Model):
-    notification_type = models.TextChoices() # we can make notification types (CRITICAL, NON-CRITICAL, URGENT ETC)
+    notification_type = models.CharField(choices=NotificationTypes.choices) # we can make notification types (CRITICAL, NON-CRITICAL, URGENT ETC)
     message = models.TextField(blank=False, max_length=100) # will hold the notification message
-    event = models.ForeignKey(Event, null=False)
-    delivery_method = models.CharField(choices)
-        
-
-
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, null=False)
+    delivery_method = models.CharField(choices=NotificationDeliveryTypes.choices)
+    delivery_status = models.CharField(choices=DeliveryStatus.choices)
+    
 class Detection(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     detected_obj = models.CharField(choices=DetectionTypes.choices)
@@ -85,5 +74,4 @@ class Detection(models.Model):
     photo = models.ForeignKey(Photo, on_delete=models.CASCADE)
     video = models.ForeignKey(Video, on_delete=models.CASCADE, null=True, blank=True)
     bounding_box = models.JSONField() # For example {"x": 100, "y": 100, "width": 200, "height": 300}
-    
 
