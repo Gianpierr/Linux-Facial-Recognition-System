@@ -54,15 +54,17 @@ class UserView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def put(self, request, pk=None):
+        # if primary key is not in request, return Error
         if not pk:
             return Response(
                 {"error": "UserID required for update"},
                 status=status.HTTP_400_BAD_REQUEST
             )
+        
         try:
-            user = User.objects.get(pk=pk)
-            serializer = UserSerializer(user, data=request.data, partial=True)
-            
+            user = User.objects.get(pk=pk) # get the user in question 
+            serializer = UserSerializer(user, data=request.data, partial=True) # update that user
+
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
@@ -70,8 +72,27 @@ class UserView(APIView):
 
         except User.DoesNotExist:
             return Response(
-                {"error": "User does not found."},
+                {"error": "User not found."},
                 status=status.HTTP_404_NOT_FOUND
             )
 
+    def delete(self, request, pk=None):
+
+        if not pk:
+            return Response(
+                {"error": "UserID not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        try:
+            user = User.objects.get(pk=pk).delete()
+            
+            return Response(
+                status=status.HTTP_204_NO_CONTENT
+            )
+        except User.DoesNotExist:
+            return Response(
+                {"error": "User not found."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+            
         
