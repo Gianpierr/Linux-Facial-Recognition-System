@@ -1,7 +1,20 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from models import (
-    UserProfile
+from .models import (
+    UserProfile,
+    Photo,
+    Video,
+    Event,
+    MediaBase
+)
+
+from .constants import (
+    DetectionTypes,
+    ProcessingTypes,
+    EventStatusTypes,
+    NotificationDeliveryTypes,
+    DeliveryStatus,
+    NotificationTypes
 )
 
 # TODO: Change to Model Serializer
@@ -9,7 +22,7 @@ from models import (
 class UserProfileSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     phone = serializers.CharField(max_length=15)
-    profile_pic = serializers.ImageField()
+    profile_pic = serializers.ImageField(required=False )
 
     def create(self, validated_data):
         return UserProfile.objects.create(**validated_data)
@@ -35,7 +48,12 @@ class UserSerializer(serializers.Serializer):
     
 
     def create(self, validated_data):
-        return User.objects.create(**validated_data)
+
+        if profile := validated_data.pop("profile"):
+            user = User.objects.create(**validated_data)
+            profile = UserProfile.objects.create(user = user, **profile)
+
+        return user
     
     def update(self, instance, validated_data):
         validated_data.pop("password", None ) # Remove password if present
@@ -46,3 +64,53 @@ class UserSerializer(serializers.Serializer):
         return instance
     
     # TODO: Add validation methods
+
+# Another way to create a serializer (alot faster and better)
+# Add a create and update method for you (Vewy nihhh!)
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = "__all__"
+        read_only_fields = [
+            'id', 'started_at', 'ended_at', 'created_at', 'updated_at',
+            'event_type', 'detection_count', 'max_confidence', 'notification_sent',
+            'notification_sent_at', 'thumbnail'
+        ]
+        
+
+class MediaBaseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MediaBase
+        fields = '__all__'
+        read_only_fields = [
+            'captured_at', 'created_at', 'updated_at', 'has_detections',
+            'processing_status', 'file_size' 
+        ]
+
+        extra_kwargs = {
+            'description' :{'required': False, 'allow_null': True},
+        }
+        
+
+
+
+class PhotoSerializer(serializers.Serializer):
+    image = serializers.ImageField(required=False, allow_null=True)
+    image_format = serializers.CharField(max_length=10)
+    width = serializers.IntegerField()
+    height = serializers.IntegerField()
+    storage_path = serializers.CharField()
+    
+    def create(self, validated_data):
+        return Photo.objects.create(**validated_data)
+    
+    def update(self, instance, validated_data):
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.save()
+        return instance
+
+    
+    
