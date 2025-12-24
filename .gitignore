@@ -2,3 +2,10 @@ argus/argus_backend/__pycache__/
 *.pyc
 *.pyo
 *.py[cod]
+__pycache__/
+.Python
+
+*.log
+db.sqlite3
+/media
+/static
