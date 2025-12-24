@@ -41,12 +41,12 @@ class MediaBase(models.Model):
         abstract = True
 
 class Photo(MediaBase):
-    image = models.ImageField(upload_to="images/") # TODO: do not forget to set the media root
-    thumbnail = models.ImageField(upload_to="image_thumbnails/") # Maybe use to show the user thumbnails of their captured pictures
+    image = models.ImageField(upload_to="images/") # TODO: do not forget to set the media root, Image can be thumbnail
     image_format = models.CharField(max_length=10)
     width = models.IntegerField()
     height = models.IntegerField()
     storage_path = models.CharField()
+
 
 class Video(MediaBase):
     video = models.FileField(upload_to="videos/") #TODO: do not forget to set the media root 
