@@ -5,7 +5,8 @@ from .models import (
     Photo,
     Video,
     Event,
-    MediaBase
+    MediaBase,
+    Notification
 )
 
 from .constants import (
@@ -76,7 +77,7 @@ class EventSerializer(serializers.ModelSerializer):
             'event_type', 'detection_count', 'max_confidence', 'notification_sent',
             'notification_sent_at', 'thumbnail'
         ]
-        
+
 
 class MediaBaseSerializer(serializers.ModelSerializer):
     class Meta:
@@ -91,8 +92,6 @@ class MediaBaseSerializer(serializers.ModelSerializer):
             'description' :{'required': False, 'allow_null': True},
         }
         
-
-
 
 class PhotoSerializer(serializers.Serializer):
     image = serializers.ImageField(required=False, allow_null=True)
@@ -111,6 +110,31 @@ class PhotoSerializer(serializers.Serializer):
 
         instance.save()
         return instance
+    
+class VideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Video
+        fields = '__all__'
+        read_only_fields = [
+            'id', 'created_at', 'updated_at'
+        ]
+        
+    
 
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = '__all__'
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # FIXME: might be a source of error (need to test if this works)
+        for field_name, field_obj in self.fields.items():
+            if field_name not in ('delivery_method', 'delivery_status'):
+                field_obj.read_only = True
+
+
+    
     
     
