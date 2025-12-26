@@ -23,8 +23,7 @@ class Event(models.Model):
     notification_sent_at = models.DateTimeField(null=True) # when was the notification sent
     thumbnail = models.ImageField() # picture with the maximum confidence in detection of an object
 
-    def __str__(self):
-        return self.name
+    
     
 class MediaBase(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE) # need to 
@@ -50,7 +49,7 @@ class Photo(MediaBase):
 
 class Video(MediaBase):
     video = models.FileField(upload_to="videos/") #TODO: do not forget to set the media root 
-    thumbnail = models.ImageField(upload_to="video_thumbnails/")
+    thumbnail = models.ImageField(upload_to="video_thumbnails/", blank=True)
     duration = models.FloatField()
     width = models.IntegerField()
     height = models.IntegerField() # might delete these attributes (currently do not see the reason behind adding yet)
