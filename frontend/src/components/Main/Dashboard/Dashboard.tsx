@@ -33,7 +33,7 @@ export default function Dashboard() {
          <div className="card-grid">
             {cardData.map((card, index)=> (
                <Card
-                  key={index}
+                  key={`${index}`}
                   title={card.title}
                   image={card.image}
                   size={card.size}>
