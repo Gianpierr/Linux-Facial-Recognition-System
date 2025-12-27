@@ -40,7 +40,7 @@ class MediaBase(models.Model):
         abstract = True
 
 class Photo(MediaBase):
-    image = models.ImageField(upload_to="images/") # TODO: do not forget to set the media root, Image can be thumbnail
+    image = models.ImageField(upload_to="images/", null = False) # TODO: do not forget to set the media root, Image can be thumbnail
     image_format = models.CharField(max_length=10)
     width = models.IntegerField()
     height = models.IntegerField()
@@ -48,8 +48,8 @@ class Photo(MediaBase):
 
 
 class Video(MediaBase):
-    video = models.FileField(upload_to="videos/") #TODO: do not forget to set the media root 
-    thumbnail = models.ImageField(upload_to="video_thumbnails/")
+    video = models.FileField(upload_to="videos/", null = False) #TODO: do not forget to set the media root 
+    thumbnail = models.ImageField(upload_to="video_thumbnails/", null = False)
     duration = models.FloatField()
     width = models.IntegerField()
     height = models.IntegerField() # might delete these attributes (currently do not see the reason behind adding yet)
