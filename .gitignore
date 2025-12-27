@@ -1,9 +1,11 @@
-gitignore# Python
-__pycache__/
-*.py[cod]
+argus/argus_backend/__pycache__/
 *.pyc
-*$py.class
+*.pyo
+*.py[cod]
+__pycache__/
+.Python
 
-# Django
 *.log
 db.sqlite3
+/media
+/static
