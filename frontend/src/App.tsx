@@ -1,6 +1,9 @@
 
 import { Routes, Route } from 'react-router'
-import Home from './components/Home.tsx'
+import Home from './pages/Home.tsx'
+import Main from './pages/Main.tsx'
+
+
 import './App.css'
 
 
@@ -10,19 +13,11 @@ function App() {
     <>
     <Routes>
       <Route path="/" element={<Home />}> </Route>
+      <Route path="dashboard" element = {<Main/>}></Route>
 
     </Routes>
 
-    
-    {/*
-      <NavBar
-      content= {
-        <Routes>
-         <Route path="" element={<Home/>}/>
-        </Routes>
-     
-      }/> */ }
-      </>
+   </>
   )
 }
 
