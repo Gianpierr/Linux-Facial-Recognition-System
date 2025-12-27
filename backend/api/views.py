@@ -4,13 +4,20 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 from .models import (
-    User
+    User,
+    Video,
 )
 from .serializers import (
-    UserSerializer
+    UserSerializer,
+    VideoSerializer,
 )
 
 class UserPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
+class VideoPagination(PageNumberPagination):
     page_size = 10
     page_size_query_param = 'page_size'
     max_page_size = 100
@@ -77,7 +84,6 @@ class UserView(APIView):
             )
 
     def delete(self, request, pk=None):
-
         if not pk:
             return Response(
                 {"error": "UserID not found"},
@@ -95,4 +101,97 @@ class UserView(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
             
+
+class VideoView(APIView):
+    
+    def get(self, request, pk = None):
+        if pk:
+            try:
+                video = Video.objects.get(id = pk)
+                data = VideoSerializer(video).data
+                return Response(data)
+            except Video.DoesNotExist:
+                return Response(
+                    {"error": "Video not found."},
+                    status = status.HTTP_404_NOT_FOUND
+                )
+        else:
+            
+            videos = Video.objects.all()
+            paginator = VideoPagination()
+            paginated_videos = paginator.paginate_queryset(videos, request)
+            serializer = VideoSerializer(paginated_videos, many=True)
+
+            return paginator.get_paginated_response(serializer.data)
+    
+    def post(self, request ):
+        
+        serializer = VideoSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response(
+                    serializer.data, 
+                    status = status.HTTP_201_CREATED
+                )
+    
+    def put(self, request, pk = None):
+        if not pk:
+            return Response(
+                {"error": "VideoID required for update"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            video = Video.objects.get(id = pk)
+
+            serializer = VideoSerializer(video, data = request.data, many = True)
+
+            if serializer.is_valid():
+                serializer.save()
+
+                return Response(
+                    serializer.data,
+                    status = status.HTTP_200_OK
+                )
+            return Response(
+                serializer.errors, 
+                status = status.HTTP_400_BAD_REQUEST
+            )
+            
+        except Video.DoesNotExist:
+            return Response(
+                {"error": "Video not found."},
+                status = status.HTTP_404_NOT_FOUND                
+            )
+    
+    def delete(self, request, pk = None):
+        if not pk:
+            return Response(
+                {"error": "VideoID required for deletion."}
+            )
+        try:
+            video = Video.objects.get(id = pk).delete()
+
+            return Response(
+                status = status.HTTP_204_NO_CONTENT
+            )
+
+        except Video.DoesNotExist:
+
+            return Response(
+                {"error": "Video not found."},
+                status = status.HTTP_404_NOT_FOUND
+            )
+
+
+
+
+
+
+
+
+
+            
+
         
