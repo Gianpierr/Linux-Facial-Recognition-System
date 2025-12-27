@@ -49,7 +49,7 @@ class Photo(MediaBase):
 
 class Video(MediaBase):
     video = models.FileField(upload_to="videos/") #TODO: do not forget to set the media root 
-    thumbnail = models.ImageField(upload_to="video_thumbnails/", blank=True)
+    thumbnail = models.ImageField(upload_to="video_thumbnails/")
     duration = models.FloatField()
     width = models.IntegerField()
     height = models.IntegerField() # might delete these attributes (currently do not see the reason behind adding yet)
@@ -70,7 +70,7 @@ class Detection(models.Model):
     confidence = models.FloatField(default=0)
     label = models.CharField() # Using YOLO for detection which has 80+ object classes (Not to be confused with DetectionType: label is more specific)
     model_version = models.CharField()
-    photo = models.ForeignKey(Photo, on_delete=models.CASCADE)
+    photo = models.ForeignKey(Photo, on_delete=models.CASCADE, null=True)
     video = models.ForeignKey(Video, on_delete=models.CASCADE, null=True, blank=True)
     bounding_box = models.JSONField() # For example {"x": 100, "y": 100, "width": 200, "height": 300}
 
