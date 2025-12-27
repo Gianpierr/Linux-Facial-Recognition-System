@@ -6,7 +6,8 @@ from .models import (
     Video,
     Event,
     MediaBase,
-    Notification
+    Notification,
+    Detection
 )
 
 from .constants import (
@@ -133,6 +134,20 @@ class NotificationSerializer(serializers.ModelSerializer):
         for field_name, field_obj in self.fields.items():
             if field_name not in ('delivery_method', 'delivery_status'):
                 field_obj.read_only = True
+
+class DetectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Detection
+        fields = '__all__'
+        
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            
+            # FIXME: might be a source of error (need to test if this works)
+            for field_name, field_obj in self.fields.items():
+                if field_name not in ('delivery_method', 'delivery_status'):
+                    field_obj.read_only = True
+
 
 
     
