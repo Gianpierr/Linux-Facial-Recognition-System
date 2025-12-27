@@ -87,13 +87,13 @@ class VideoTest(TestCase):
 
         
         self.assertFalse(serializer.is_valid())
-        print(serializer.errors)
         
         self.assertEqual(serializer.errors, {
             'video': [ErrorDetail(string='No file was submitted.', code='required')]
             }
         ) # TODO: Add a case where there is a video object (library)
-    ### 🚧 More tests WIP 🚧
+
+    #### 🚧 More tests WIP 🚧 ####
 
 
         
